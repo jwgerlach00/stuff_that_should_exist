@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='stse',
-    version='0.0.0',
+    version='0.0.2',
     license='MIT',
     author='Jacob Gerlach',
     author_email='jwgerlach00@gmail.com',
@@ -12,8 +12,7 @@ setup(
     packages=find_packages('src'),
     package_dir={'': 'src'},
     install_requires=[
-        'rdkit-pypi',
-        'openpyxl',
+        'numpy',
         'pandas',
     ],
 )
