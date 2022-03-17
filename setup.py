@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='stse',
-    version='0.0.7',
+    version='0.0.8',
     license='MIT',
     author='Jacob Gerlach',
     author_email='jwgerlach00@gmail.com',
