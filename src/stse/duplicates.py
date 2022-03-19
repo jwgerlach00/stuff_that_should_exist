@@ -50,6 +50,15 @@ def remove(df, subsets):  # *
     return filter(df, subsets=subsets)
 
 def indices(df, column):  # *
+    """Finds indices of rows in df column that hold duplicate values.
+
+    :param df: Dataframe to perform duplicate search on
+    :type df: pandas DataFrame
+    :param column: Name of column in df
+    :type column: str
+    :return: Indices
+    :rtype: list
+    """
     return list(df[pd.DataFrame.duplicated(df, subset=[column])].index)
 
 def average(df, subsets, average_by):  # *

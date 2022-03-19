@@ -2,21 +2,29 @@ import numpy as np
 
 
 def bit_vect(length, indices):
-    """Generates a bit vector, hot at each index.
+    """Generates a bit vector, hot at each index in list.
 
-    Args:
-        length (int): Length of desired bit vector.
-        length
-        indices (iter(int)): List of indices to equal 1.
-
-    Returns:
-        np.array: bit vector.
+    :param length: Length of vector to generate
+    :type length: int
+    :param indices: Collection of indices to set to 1, all other set to 0
+    :type indices: iterable[int]
+    :return: one-hot bit-vector
+    :rtype: iterable[int]
     """
     out = np.zeros(length)
     out[indices] = 1
     return out
 
-def remove_hot_overlap(hot_vect, overlap_vect):
-    overlap_vect = overlap_vect.astype(bool)
-    hot_vect[overlap_vect] = 0
-    return hot_vect
+def remove_hot_overlap(input_vector, reference_vector):
+    """Removes overlap from input vector by setting reference vector hot indices to 0.
+
+    :param input_vector: Vector to remove overlapping indices from
+    :type input_vector: arraylike
+    :param reference_vector: Vector to reference for overlapping indices
+    :type reference_vector: arraylike
+    :return: input_vector with overlapping indices set to 0
+    :rtype: arraylike
+    """
+    reference_vector = reference_vector.astype(bool)
+    input_vector[reference_vector] = 0
+    return input_vector
