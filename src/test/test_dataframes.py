@@ -110,7 +110,36 @@ class TestDataframes(unittest.TestCase):
         assert na_df.equals(self.non_num_solution)
         
     def test_nan_col_indices(self):
+        # Test each col separately
+        assert dataframes.nan_col_indices(self.blank_solution, self.blank_solution.columns[0]) == [0]
+        assert dataframes.nan_col_indices(self.blank_solution, self.blank_solution.columns[1]) == [2]
         
+    def test_remove_nan_cols(self):
+        nan_col_df = self.test_df.copy()
+        
+        # Append new columns
+        nan_col_df['c'] = 3*['None']
+        nan_col_df['d'] = 3*['nan']
+        nan_col_df['e'] = 3*['']
+        nan_col_df['f'] = 3*[np.nan]
+        
+        # Check new columns were added successfully
+        assert len(nan_col_df.columns) == 6
+        
+        # Test blank column removal
+        assert dataframes.remove_nan_cols(nan_col_df).equals(self.test_df)
+        
+    def test_remove_nan_rows(self):
+        self.non_num_solution = pd.DataFrame({'a': [np.nan, '5', '6'], 'b': [np.nan, '8', np.nan]})
+        
+        col_a = dataframes.remove_nan_rows(self.blank_solution, ['a'])
+        assert col_a.equals(pd.DataFrame({'a': ['5', '6'], 'b': ['8', np.nan]}))
+        
+        col_b = dataframes.remove_nan_rows(self.blank_solution, ['b'])
+        assert col_b.equals(pd.DataFrame({'a': [np.nan, '5'], 'b': ['a', '8']}))
+        
+        both_cols = dataframes.remove_nan_rows(self.blank_solution, self.blank_solution.columns)
+        assert both_cols.equals(pd.DataFrame({'a': ['5'], 'b': ['8']}))
     
 if __name__ == '__main__':
     unittest.main()
