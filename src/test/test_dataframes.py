@@ -140,6 +140,7 @@ class TestDataframes(unittest.TestCase):
         
         both_cols = dataframes.remove_nan_rows(self.blank_solution, self.blank_solution.columns)
         assert both_cols.equals(pd.DataFrame({'a': ['5'], 'b': ['8']}))
-    
+
+
 if __name__ == '__main__':
     unittest.main()
