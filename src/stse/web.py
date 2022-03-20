@@ -1,3 +1,7 @@
+import pandas as pd
+import warnings
+
+
 def read_spreadsheet(file, return_ext=False):
 
     # Get file MIME
@@ -30,4 +34,4 @@ def read_spreadsheet(file, return_ext=False):
         warnings.warn(f'"{file_mime}" is not a supported filetype.')
 
 
-    return input_data, file_ext if return_ext else input_data
+    return (input_data, file_ext) if return_ext else input_data

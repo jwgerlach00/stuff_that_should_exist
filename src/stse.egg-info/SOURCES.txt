@@ -1,0 +1,16 @@
+setup.py
+src/stse/__init__.py
+src/stse/dataframes.py
+src/stse/duplicates.py
+src/stse/one_hot.py
+src/stse/web.py
+src/stse.egg-info/PKG-INFO
+src/stse.egg-info/SOURCES.txt
+src/stse.egg-info/dependency_links.txt
+src/stse.egg-info/requires.txt
+src/stse.egg-info/top_level.txt
+src/test/__init__.py
+src/test/test_dataframes.py
+src/test/test_duplicates.py
+src/test/test_one_hot.py
+src/test/test_web.py

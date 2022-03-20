@@ -15,7 +15,7 @@ def bit_vect(length, indices):  # *
     out[indices] = 1
     return out
 
-def remove_hot_overlap(input_vector, reference_vector):
+def remove_hot_overlap(input_vector, reference_vector):  # *
     """Removes overlap from input vector by setting reference vector hot indices to 0.
 
     :param input_vector: Vector to remove overlapping indices from

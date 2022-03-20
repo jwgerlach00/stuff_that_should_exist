@@ -33,13 +33,17 @@ class TestDuplicates(unittest.TestCase):
             self.filt_multi_dup_sol)
     
     def test_indices(self):
-        assert duplicates.indices(self.test_df, 'c') == [1, 3, 4, 5]
+        self.assertEqual(
+            duplicates.indices(self.test_df, 'c'), 
+            [1, 3, 4, 5]
+        )
         
     def test_remove(self):
         assert duplicates.remove(self.test_df, ['aa']).equals(self.filt_not_dup_sol)
         
     def test_average(self):
         assert duplicates.average(self.test_df, ['aa'], average_by='b').equals(self.average_sol)
+
 
 if __name__ == '__main__':
     unittest.main()
