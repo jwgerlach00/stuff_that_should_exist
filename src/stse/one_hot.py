@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def bit_vect(length, indices):
+def bit_vect(length, indices):  # *
     """Generates a bit vector, hot at each index in list.
 
     :param length: Length of vector to generate
@@ -25,6 +25,7 @@ def remove_hot_overlap(input_vector, reference_vector):
     :return: input_vector with overlapping indices set to 0
     :rtype: arraylike
     """
-    reference_vector = reference_vector.astype(bool)
+    input_vector = np.array(input_vector)
+    reference_vector = np.array(reference_vector).astype(bool)
     input_vector[reference_vector] = 0
     return input_vector
