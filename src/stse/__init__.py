@@ -1,1 +1,1 @@
-from src import dataframes, duplicates, one_hot, web
+from stse import dataframes, duplicates, one_hot, web
