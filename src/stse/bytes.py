@@ -1,6 +1,14 @@
 import numpy as np
 
 
+"""
+    File name: bytes.py
+    Author: Jacob Gerlach
+    Description: Assortment of basic byte vector operations.
+    Notes:
+        * = Function has associated unit test.
+"""
+
 def bit_vect(length, indices):  # *
     """Generates a bit vector, hot at each index in list.
 

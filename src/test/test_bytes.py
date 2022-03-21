@@ -1,10 +1,10 @@
 import unittest
 import numpy as np
 
-from stse import one_hot
+from stse import bytes
 
 
-class TestOneHot(unittest.TestCase):
+class TestBytes(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         return super().setUpClass()
@@ -12,26 +12,26 @@ class TestOneHot(unittest.TestCase):
     def test_bit_vect(self):
         # Test non-iterable single index value
         np.testing.assert_array_equal(
-            one_hot.bit_vect(8, 1), 
+            bytes.bit_vect(8, 1), 
             [0, 1, 0, 0, 0, 0, 0, 0]
         )
         
         # Test iterable multi-index value
         np.testing.assert_array_equal(
-            one_hot.bit_vect(8, [1, 2, 3, 6]), 
+            bytes.bit_vect(8, [1, 2, 3, 6]), 
             [0, 1, 1, 1, 0, 0, 1, 0]
         )
         
     def test_remove_hot_overlap(self):
         # Test w/ lists
         np.testing.assert_array_equal(
-            one_hot.remove_hot_overlap([0, 1, 1, 0, 0], [1, 1, 0, 0, 0]),
+            bytes.remove_hot_overlap([0, 1, 1, 0, 0], [1, 1, 0, 0, 0]),
             [0, 0, 1, 0, 0]
         )
         
         # Test w/ arrays
         np.testing.assert_array_equal(
-            one_hot.remove_hot_overlap(np.array([0, 1, 1, 0, 0]), np.array([1, 1, 0, 0, 0])),
+            bytes.remove_hot_overlap(np.array([0, 1, 1, 0, 0]), np.array([1, 1, 0, 0, 0])),
             [0, 0, 1, 0, 0]
         )
 

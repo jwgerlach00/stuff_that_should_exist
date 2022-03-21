@@ -2,6 +2,14 @@ import pandas as pd
 import numpy as np
 
 
+"""
+    File name: duplicates.py
+    Author: Jacob Gerlach
+    Description: Assortment of pandas DataFrame operations for handling duplicates.
+    Notes:
+        * = Function has associated unit test.
+"""
+
 def filter(df, subsets, return_duplicates=False, how='all'):  # *
     """Filters duplicates to either return DataFrame subset of duplicates or non-duplicates.
 
