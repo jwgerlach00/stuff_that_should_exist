@@ -1,6 +1,9 @@
 import numpy as np
 from difflib import get_close_matches
 import re
+import mimetypes
+from werkzeug.datastructures import FileStorage
+import tempfile
 
 
 """
@@ -159,3 +162,23 @@ def remove_nan_rows(df, value_column_names):  # *
         pandas DataFrame: DataFrame with rows dropped where value is NaN.
     """
     return df.dropna(axis=0, subset=value_column_names).reset_index(drop=True)
+
+def store_df(df, ext):
+    
+    buffer = tempfile.NamedTemporaryFile()
+    if ext == 'csv':
+        df.to_csv(buffer, index=False)
+    elif ext == 'xlsx':
+        df.to_excel(buffer, index=False)
+    elif ext == 'tsv':
+        df.to_csv(buffer, index=False, sep='\t')
+    else:
+        raise('Only "csv", "xlsx" and "tsv" extensions are accepted')
+    
+    type = mimetypes.guess_type(f'_.{ext}')[0]
+    
+    return FileStorage(
+        stream=open(buffer.name, 'rb'),
+        filename=f'test.{ext}',
+        content_type=type,
+    )
