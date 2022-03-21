@@ -1,8 +1,11 @@
 import pandas as pd
 import warnings
+from werkzeug.datastructures import FileStorage
+import tempfile
+import mimetypes
 
 
-def read_spreadsheet(file, return_ext=False):
+def read_spreadsheet(file, return_ext=False):  # *
 
     # Get file MIME
     file_mime = file.content_type
@@ -35,3 +38,23 @@ def read_spreadsheet(file, return_ext=False):
 
 
     return (input_data, file_ext) if return_ext else input_data
+
+def store_df(df, ext):
+    
+    buffer = tempfile.NamedTemporaryFile()
+    if ext == 'csv':
+        df.to_csv(buffer, index=False)
+    elif ext == 'xlsx':
+        df.to_excel(buffer, index=False)
+    elif ext == 'tsv':
+        df.to_csv(buffer, index=False, sep='\t')
+    else:
+        raise('Only "csv", "xlsx" and "tsv" extensions are accepted')
+    
+    type = mimetypes.guess_type(f'_.{ext}')[0]
+    
+    return FileStorage(
+            stream=open(buffer.name, 'rb'),
+            filename=f'test.{ext}',
+            content_type=type,
+    )
