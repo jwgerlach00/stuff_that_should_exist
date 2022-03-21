@@ -51,7 +51,7 @@ def pull_not_val(df, col_name, value):  # *
     return df.where(df[col_name] != value).dropna()
 
 
-def id_nearest_col(df, name, case_insensitive=True):  # *
+def id_nearest_col(df, name, similarity_ratio=0.5, case_insensitive=True):  # *
     """Sends closest column to input column name provided that it is at least 50% similar. CASE INSENSITIVE.
 
     Args:
@@ -62,7 +62,6 @@ def id_nearest_col(df, name, case_insensitive=True):  # *
     Returns:
         str: Most similar column name.
     """
-    similarity_ratio = 0.5  # 50%
     
     # Convert both to lowercase
     if case_insensitive:

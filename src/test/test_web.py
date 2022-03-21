@@ -16,6 +16,7 @@ df = pd.DataFrame({
 print(df)
 
 buffer = io.BytesIO()
+(packbionics) jacob@jacob-XPS-13:~/git_repos/state_prediction_ml$ 
 # df.to_json('data/web_test.json')
 df.to_csv(buffer)
 
