@@ -20,7 +20,7 @@ def bit_vect(length, indices):  # *
     :rtype: iterable[int]
     """
     out = np.zeros(length)
-    out[list(indices)] = 1
+    out[indices] = 1
     return out
 
 def remove_hot_overlap(input_vector, reference_vector):  # *
