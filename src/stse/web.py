@@ -9,7 +9,7 @@ import pandas as pd
         * = Function has associated unit test.
 """
 
-def read_spreadsheet(file, return_ext=False):  # *
+def filemime_2_df(file, return_ext=False):  # *
     """Reads spreadsheet from werkzeug FileStorage object according to file mimetype.
 
     :param file: Werkzeug FileStorage input
@@ -51,3 +51,28 @@ def read_spreadsheet(file, return_ext=False):  # *
 
 
     return (input_data, file_ext) if return_ext else input_data
+
+def filename_2_df(file):
+    """Reads spreadsheet from werkzeug FileStorage object according to filename string extension.
+
+    :param file: Werkzeug FileStorage input
+    :type file: werkzeug FileStorage
+    :return: spreadsheet read from file object
+    :rtype: pandas DataFrame
+    """
+    
+    # Split extension from string
+    ext = file.filename.split('.')[-1]
+    
+    # Map extension to pandas function
+    read_function = {
+        'csv': pd.read_csv,
+        'xlsx': pd.read_excel,
+        'xls': pd.read_excel,
+        'tsv': lambda x: pd.read_csv(x, sep='\t')
+    }
+    
+    try:
+        return read_function[ext](file)
+    except Exception as e:  # Unsupported filetype
+        print(e)
