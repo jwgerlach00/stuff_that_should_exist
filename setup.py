@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='stse',
-    version='0.1.01',
+    version='0.1.02',
     license='MIT',
     author='Jacob Gerlach',
     author_email='jwgerlach00@gmail.com',
@@ -14,6 +14,7 @@ setup(
     install_requires=[
         'numpy',
         'pandas',
-        'werkzeug'
+        'werkzeug',
+        'pymongo'
     ],
 )
