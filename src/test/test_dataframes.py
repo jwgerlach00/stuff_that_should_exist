@@ -1,6 +1,7 @@
 import unittest
 import pandas as pd
 import numpy as np
+import json
 
 from stse import dataframes
 
@@ -140,7 +141,22 @@ class TestDataframes(unittest.TestCase):
         
         both_cols = dataframes.remove_nan_rows(self.blank_solution, self.blank_solution.columns)
         assert both_cols.equals(pd.DataFrame({'a': ['5'], 'b': ['8']}))
-
+        
+    def test_df_2_json(self):
+        out = dataframes.df_2_json(self.test_df)
+        expected = '[[4, "6"], ["5", "5"], ["6", "4"]]'
+        
+        self.assertEqual(
+            out,
+            expected
+        )
+        
+        # Ensure valid json
+        try:
+            json.loads(out)
+        except Exception as e:
+            self.fail(e)
+        
 
 if __name__ == '__main__':
     unittest.main()

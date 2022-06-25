@@ -184,7 +184,7 @@ def store_df(df, ext):
         content_type=type,
     )
     
-def df_2_json(df:pd.DataFrame) -> str:
+def df_2_json(df:pd.DataFrame) -> str:  # *
     """Converts from dataframe to JSON string.
 
     Args:
