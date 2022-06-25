@@ -1,6 +1,5 @@
 import pandas as pd
 from pymongo.collection import Collection
-import json
 
 
 def df_2_db(df:pd.DataFrame, collection:Collection) -> None:  # *
