@@ -4,6 +4,8 @@ import re
 import mimetypes
 from werkzeug.datastructures import FileStorage
 import tempfile
+import pandas as pd
+import json
 
 
 """
@@ -52,7 +54,6 @@ def pull_not_val(df, col_name, value):  # *
         pandas DataFrame: DataFrame where value is not found.
     """
     return df.where(df[col_name] != value).dropna()
-
 
 def id_nearest_col(df, name, similarity_ratio=0.5, case_insensitive=True):  # *
     """Sends closest column to input column name provided that it is at least 50% similar. CASE INSENSITIVE.
@@ -182,3 +183,14 @@ def store_df(df, ext):
         filename=f'test.{ext}',
         content_type=type,
     )
+    
+def df_2_json(df:pd.DataFrame) -> str:
+    """Converts from dataframe to JSON string.
+
+    Args:
+        df (pd.DataFrame): Data.
+
+    Returns:
+        str: JSON string data.
+    """
+    return json.dumps(df.to_numpy().tolist())
