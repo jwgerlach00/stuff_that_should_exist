@@ -194,3 +194,14 @@ def df_2_json(df:pd.DataFrame) -> str:  # *
         str: JSON string data.
     """
     return json.dumps(df.to_numpy().tolist())
+
+def z_norm(df:pd.DataFrame) -> pd.DataFrame:
+    """Normalized dataframe to a mean of 0 and standard deviation of 1.
+
+    Args:
+        df (pd.DataFrame): Data to transform.
+
+    Returns:
+        pd.DataFrame: Normalized data.
+    """
+    return (df - df.mean())/df.std()

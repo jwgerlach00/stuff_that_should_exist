@@ -1,3 +1,4 @@
+from cgi import test
 import unittest
 import pandas as pd
 import numpy as np
@@ -156,6 +157,41 @@ class TestDataframes(unittest.TestCase):
             json.loads(out)
         except Exception as e:
             self.fail(e)
+            
+    def test_z_norm(self):
+        test_df = pd.DataFrame({
+            'a': [1, 4, 7],
+            'b': [5, 9, 10]
+        })
+        z_norm_df = dataframes.z_norm(test_df)
+        
+        # Zero mean
+        self.assertFalse(
+            np.allclose(
+                test_df.mean(),
+                np.array(2*[0], dtype=float)
+            )
+        )
+        self.assertTrue(
+            np.allclose(
+                z_norm_df.mean(),
+                np.zeros(2)
+            )
+        )
+        
+        # Standard dev. of 1
+        self.assertFalse(
+            np.allclose(
+                test_df.std(),
+                np.ones(2)
+            )
+        )
+        self.assertTrue(
+            np.allclose(
+                z_norm_df.std(),
+                np.ones(2)
+            )
+        )
         
 
 if __name__ == '__main__':
