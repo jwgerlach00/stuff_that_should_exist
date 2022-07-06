@@ -1,4 +1,4 @@
-from stse import bytes
+from stse import bytes_vect
 from stse import database
 from stse import dataframes
 from stse import dictionaries
@@ -7,3 +7,4 @@ from stse import plotting
 from stse import stats
 from stse import styling
 from stse import web
+from stse import error_checking
