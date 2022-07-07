@@ -1,3 +1,4 @@
+from typing import Iterable
 import numpy as np
 from difflib import get_close_matches
 import re
@@ -6,8 +7,6 @@ from werkzeug.datastructures import FileStorage
 import tempfile
 import pandas as pd
 import json
-
-from stse.error_checking import val_check
 
 
 """
@@ -209,7 +208,7 @@ def z_norm(df:pd.DataFrame) -> pd.DataFrame:
     return (df - df.mean())/df.std()
 
 def compare(inner_df:pd.DataFrame, outer_df:pd.DataFrame, inner_column:str, outer_column:str,
-            compare_condition:str='same') -> pd.DataFrame:
+            find_same:bool=True) -> pd.DataFrame:
     """Compares two DataFrames along two specified column names.
 
     Args:
@@ -217,13 +216,23 @@ def compare(inner_df:pd.DataFrame, outer_df:pd.DataFrame, inner_column:str, oute
         outer_df (pd.DataFrame): Data to query with inner_df.
         inner_column (str): Name of column to compare along in inner_df.
         outer_column (str): Name of column to compare along in outer_df.
-        compare_condition (str, optional): If "same" returns same values, if "unique" returns values in outer_df column
-            not found in inner_df column. Defaults to "same".
+        find_same (bool, optional): If True returns same values, if False returns values in outer_df column not found in
+            inner_df column. Defaults to True.
 
     Returns:
-        pd.DataFrame: outer_df with condition specified by compare_condition.
+        pd.DataFrame: outer_df with condition specified by find_same.
     """
-    val_check('compare_condition', compare_condition, ['same', 'unique'])
     outer_in_inner = outer_df[outer_column].isin(inner_df[inner_column])
-    indices = outer_in_inner[(outer_in_inner if compare_condition=='same' else ~outer_in_inner)].index
+    indices = outer_in_inner[(outer_in_inner if find_same else ~outer_in_inner)].index
     return outer_df.iloc[indices]
+
+def concat(dfs:Iterable[pd.DataFrame], drop_uncommon_columns:bool=True, replace_blank_w_nan:bool=True):
+    concat_df = pd.concat(dfs, axis=0, ignore_index=True)
+    
+    if replace_blank_w_nan:
+        concat_df.replace('', np.nan, inplace=True)
+    
+    if drop_uncommon_columns:
+        common_columns 
+        common_columns = set.intersection(*dataset_columns)
+        concat_df = concat_df[common_columns]
