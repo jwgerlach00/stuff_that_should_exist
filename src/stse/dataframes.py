@@ -7,6 +7,8 @@ import tempfile
 import pandas as pd
 import json
 
+from stse.error_checking import val_check
+
 
 """
     File name: dataframes.py
@@ -205,3 +207,23 @@ def z_norm(df:pd.DataFrame) -> pd.DataFrame:
         pd.DataFrame: Normalized data.
     """
     return (df - df.mean())/df.std()
+
+def compare(inner_df:pd.DataFrame, outer_df:pd.DataFrame, inner_column:str, outer_column:str,
+            compare_condition:str='same') -> pd.DataFrame:
+    """Compares two DataFrames along two specified column names.
+
+    Args:
+        inner_df (pd.DataFrame): Data to search for in outer_df.
+        outer_df (pd.DataFrame): Data to query with inner_df.
+        inner_column (str): Name of column to compare along in inner_df.
+        outer_column (str): Name of column to compare along in outer_df.
+        compare_condition (str, optional): If "same" returns same values, if "unique" returns values in outer_df column
+            not found in inner_df column. Defaults to "same".
+
+    Returns:
+        pd.DataFrame: outer_df with condition specified by compare_condition.
+    """
+    val_check('compare_condition', compare_condition, ['same', 'unique'])
+    outer_in_inner = outer_df[outer_column].isin(inner_df[inner_column])
+    indices = outer_in_inner[(outer_in_inner if compare_condition=='same' else ~outer_in_inner)].index
+    return outer_df.iloc[indices]

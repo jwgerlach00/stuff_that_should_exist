@@ -193,6 +193,29 @@ class TestDataframes(unittest.TestCase):
             )
         )
         
+    def test_compare(self):
+        inner = pd.DataFrame({
+            'a': [1, 2, 3, 4],
+            'b': [2, 3, 5, 6]
+        })
+        outer = pd.DataFrame({
+            'c': [2, 3, 5, 6, 7, 8, 9, 10]
+        })
+        
+        # Find same
+        expected = outer.iloc[:2]
+        out = dataframes.compare(inner, outer, 'a', 'c', compare_condition='same')
+        self.assertTrue(
+            out.equals(expected)
+        )
+        
+        # Find unique
+        expected = outer.iloc[2:]
+        out = dataframes.compare(inner, outer, 'a', 'c', compare_condition='unique')
+        self.assertTrue(
+            out.equals(expected)
+        )
+        
 
 if __name__ == '__main__':
     unittest.main()
