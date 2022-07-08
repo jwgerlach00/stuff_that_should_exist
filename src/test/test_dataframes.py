@@ -204,16 +204,55 @@ class TestDataframes(unittest.TestCase):
         
         # Find same
         expected = outer.iloc[:2]
-        out = dataframes.compare(inner, outer, 'a', 'c', compare_condition='same')
+        out = dataframes.compare(inner, outer, 'a', 'c', find_same=True)
         self.assertTrue(
             out.equals(expected)
         )
         
         # Find unique
         expected = outer.iloc[2:]
-        out = dataframes.compare(inner, outer, 'a', 'c', compare_condition='unique')
+        out = dataframes.compare(inner, outer, 'a', 'c', find_same=False)
         self.assertTrue(
             out.equals(expected)
+        )
+    
+    def test_concat(self):
+        df1 = pd.DataFrame({
+            'a': [1, 2, 3],
+            'c': [4, 5, 6],
+            'b': [7, 8, 9]
+        })
+        df2 = pd.DataFrame({
+            'b': [10, 11],
+            'c': [13, 14],
+            'd': [16, 17]
+        })
+        
+        # Drop uncommon
+        expected1 = pd.DataFrame({
+            'b': [7, 8, 9, 10, 11],
+            'c': [4, 5, 6, 13, 14]
+        })
+        out1 = dataframes.concat([df1, df2], drop_uncommon_columns=True)
+        self.assertTrue(
+            out1.equals(expected1)
+        )
+        
+        # Keep uncommon, replace blank w/ nan
+        expected2 = pd.DataFrame({
+            'a': [1, 2, 3, np.nan, np.nan],
+            'b': [7, 8, 9, 10, 11],
+            'c': [4, 5, 6, 13, 14],
+            'd': [np.nan, np.nan, np.nan, 16, 17]
+        })
+        out2 = dataframes.concat([df1, df2], drop_uncommon_columns=False)
+        self.assertTrue(
+            out2.equals(expected2)
+        )
+        
+        # Dropna is possible
+        self.assertTrue(
+            out2.dropna(axis=1).equals(expected1)
         )
         
 

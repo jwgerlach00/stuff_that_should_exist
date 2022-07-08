@@ -3,6 +3,7 @@ import numpy as np
 from difflib import get_close_matches
 import re
 import mimetypes
+from pyparsing import common
 from werkzeug.datastructures import FileStorage
 import tempfile
 import pandas as pd
@@ -226,13 +227,14 @@ def compare(inner_df:pd.DataFrame, outer_df:pd.DataFrame, inner_column:str, oute
     indices = outer_in_inner[(outer_in_inner if find_same else ~outer_in_inner)].index
     return outer_df.iloc[indices]
 
-def concat(dfs:Iterable[pd.DataFrame], drop_uncommon_columns:bool=True, replace_blank_w_nan:bool=True):
-    concat_df = pd.concat(dfs, axis=0, ignore_index=True)
-    
-    if replace_blank_w_nan:
-        concat_df.replace('', np.nan, inplace=True)
-    
-    if drop_uncommon_columns:
-        common_columns 
-        common_columns = set.intersection(*dataset_columns)
-        concat_df = concat_df[common_columns]
+def concat(dfs:Iterable[pd.DataFrame], drop_uncommon_columns:bool=True) -> pd.DataFrame:
+    """Wrapper for pd.concat. Stacks DataFrames and sorts.
+
+    Args:
+        dfs (Iterable[pd.DataFrame]): Collection of DataFrames.
+        drop_uncommon_columns (bool, optional): Determines pd join method. Defaults to True.
+
+    Returns:
+        pd.DataFrame: Concatenated data.
+    """
+    return pd.concat(dfs, axis=0, ignore_index=True, join=('inner' if drop_uncommon_columns else 'outer'), sort=True)
