@@ -256,19 +256,19 @@ class TestDataframes(unittest.TestCase):
         
     def test_sync_na_drop(self):
         df1 = pd.DataFrame({
-            'a': [1, np.nan, 3],
+            'one': [1, np.nan, 3],
             'b': [4, np.nan, np.nan],
             'c': [7, 8, 9]
         })
         iter1 = ['a', 'b', 'c']
         
         # One column
-        out_df1, out_iter1 = dataframes.sync_na_drop(df1, 'a', iter1, all_na=True)
-        out_df2, out_iter2 = dataframes.sync_na_drop(df1, 'a', iter1, all_na=False)
+        out_df1, out_iter1 = dataframes.sync_na_drop(df1, 'one', iter1, all_na=True)
+        out_df2, out_iter2 = dataframes.sync_na_drop(df1, 'one', iter1, all_na=False)
         
         self.assertTrue(
             out_df1.equals(
-                df1.dropna(subset=['a'])
+                df1.dropna(subset=['one'])
             )
         )
         self.assertTrue(  # Same bc only one column
@@ -283,7 +283,7 @@ class TestDataframes(unittest.TestCase):
         )
         
         # Two columns, all_na=True
-        out_df3, out_iter3 = dataframes.sync_na_drop(df1, ['a', 'c'], iter1, all_na=True)
+        out_df3, out_iter3 = dataframes.sync_na_drop(df1, ['one', 'c'], iter1, all_na=True)
         
         self.assertTrue(  # No change
             out_df3.equals(
@@ -296,11 +296,11 @@ class TestDataframes(unittest.TestCase):
         )
         
         # Two columns, all_na=False
-        out_df4, out_iter4 = dataframes.sync_na_drop(df1, ['a', 'c'], iter1, all_na=False)
+        out_df4, out_iter4 = dataframes.sync_na_drop(df1, ['one', 'c'], iter1, all_na=False)
         
         self.assertTrue(
             out_df4.equals(
-                df1.dropna(subset=['a'])
+                df1.dropna(subset=['one'])
             )
         )
         self.assertEqual(
@@ -309,11 +309,11 @@ class TestDataframes(unittest.TestCase):
         )
         
         # 'a' and 'b' columns, all_na=True
-        out_df5, out_iter5 = dataframes.sync_na_drop(df1, ['a', 'b'], iter1, all_na=True)
+        out_df5, out_iter5 = dataframes.sync_na_drop(df1, ['one', 'b'], iter1, all_na=True)
         
         self.assertTrue(
             out_df5.equals(
-                df1.dropna(subset=['a', 'b'], how='all')
+                df1.dropna(subset=['one', 'b'], how='all')
             )
         )
         self.assertEqual(
@@ -322,11 +322,11 @@ class TestDataframes(unittest.TestCase):
         )
         
         # a' and 'b' columns, all_na=False
-        out_df6, out_iter6 = dataframes.sync_na_drop(df1, ['a', 'b'], iter1, all_na=False)
+        out_df6, out_iter6 = dataframes.sync_na_drop(df1, ['one', 'b'], iter1, all_na=False)
         
         self.assertTrue(
             out_df6.equals(
-                df1.dropna(subset=['a', 'b'], how='any')
+                df1.dropna(subset=['one', 'b'], how='any')
             )
         )
         self.assertEqual(
@@ -336,7 +336,7 @@ class TestDataframes(unittest.TestCase):
         
         # Multiple iterables
         iter2 = ['d', 'e', 'f']
-        _, out_iter7 = dataframes.sync_na_drop(df1, ['a', 'b'], iter1, iter2, all_na=False)
+        _, out_iter7 = dataframes.sync_na_drop(df1, ['one', 'b'], iter1, iter2, all_na=False)
         
         self.assertEqual(
             out_iter7,
@@ -349,7 +349,7 @@ class TestDataframes(unittest.TestCase):
         # Raise length error
         iter3 = 5*['h']
         with self.assertRaises(ValueError):
-            dataframes.sync_na_drop(df1, ['a', 'b'], iter1, iter3, all_na=True)
+            dataframes.sync_na_drop(df1, ['one', 'b'], iter1, iter3, all_na=True)
         
 
 if __name__ == '__main__':

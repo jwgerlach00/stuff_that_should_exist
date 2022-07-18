@@ -265,6 +265,7 @@ def sync_na_drop(df:Union[pd.DataFrame, pd.Series], col_s:Union[str, List[str]],
         out = np.array(iterables[0])[~is_na_mask].tolist()
     else:
         out = [np.array(it)[~is_na_mask].tolist() for it in iterables]
-        
-    return (df.dropna(subset=list(col_s), how=('all' if all_na else 'any')),
+    
+    subset = list(col_s) if not isinstance(col_s, str) else col_s
+    return (df.dropna(subset=subset, how=('all' if all_na else 'any')),
             out)
