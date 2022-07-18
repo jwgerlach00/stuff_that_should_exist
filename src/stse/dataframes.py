@@ -3,11 +3,11 @@ import numpy as np
 from difflib import get_close_matches
 import re
 import mimetypes
-from pyparsing import common
 from werkzeug.datastructures import FileStorage
 import tempfile
 import pandas as pd
 import json
+from typing import Union, List, Tuple
 
 
 """
@@ -238,3 +238,33 @@ def concat(dfs:Iterable[pd.DataFrame], drop_uncommon_columns:bool=True) -> pd.Da
         pd.DataFrame: Concatenated data.
     """
     return pd.concat(dfs, axis=0, ignore_index=True, join=('inner' if drop_uncommon_columns else 'outer'), sort=True)
+
+def sync_na_drop(df:Union[pd.DataFrame, pd.Series], col_s:Union[str, List[str]], *iterables:Iterable,
+                 all_na:bool=True) -> Tuple[pd.DataFrame, Union[list, List[list]]]:
+    """Syncs NaN values in a dataframe with a list of iterables.
+
+    Args:
+        df (pd.DataFrame): Data to drop from.
+        col_s (Union[str, list]): Name of single column or list of columns to subset for drop.
+        all_na (bool): True, drops row only if all values in row are NaN. Else drops row if any values is NaN.
+        Defaults to True.
+
+    Returns:
+        Tuple[List[Iterable], pd.DataFrame]: Tuple of list of masked iterables and NA dropped DataFrame.
+    """
+    if not all(len(i) == len(df) for i in iterables):
+        raise ValueError('All iterables must be the same length as the dataframe.')
+     
+    f = df[col_s].isnull
+    if isinstance(df[col_s], pd.DataFrame):
+        is_na_mask = f().all(axis=1) if all_na else f().any(axis=1)
+    elif isinstance(df[col_s], pd.Series):
+        is_na_mask = f()
+    
+    if len(iterables) == 1:
+        out = np.array(iterables[0])[~is_na_mask].tolist()
+    else:
+        out = [np.array(it)[~is_na_mask].tolist() for it in iterables]
+        
+    return (df.dropna(subset=list(col_s), how=('all' if all_na else 'any')),
+            out)

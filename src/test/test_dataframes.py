@@ -1,4 +1,3 @@
-from cgi import test
 import unittest
 import pandas as pd
 import numpy as np
@@ -254,6 +253,103 @@ class TestDataframes(unittest.TestCase):
         self.assertTrue(
             out2.dropna(axis=1).equals(expected1)
         )
+        
+    def test_sync_na_drop(self):
+        df1 = pd.DataFrame({
+            'a': [1, np.nan, 3],
+            'b': [4, np.nan, np.nan],
+            'c': [7, 8, 9]
+        })
+        iter1 = ['a', 'b', 'c']
+        
+        # One column
+        out_df1, out_iter1 = dataframes.sync_na_drop(df1, 'a', iter1, all_na=True)
+        out_df2, out_iter2 = dataframes.sync_na_drop(df1, 'a', iter1, all_na=False)
+        
+        self.assertTrue(
+            out_df1.equals(
+                df1.dropna(subset=['a'])
+            )
+        )
+        self.assertTrue(  # Same bc only one column
+            out_df1.equals(
+                out_df2
+            )
+        )
+        self.assertEqual(
+            out_iter1,
+            ['a', 'c'],
+            out_iter2
+        )
+        
+        # Two columns, all_na=True
+        out_df3, out_iter3 = dataframes.sync_na_drop(df1, ['a', 'c'], iter1, all_na=True)
+        
+        self.assertTrue(  # No change
+            out_df3.equals(
+                df1
+            )
+        )
+        self.assertEqual(  # No change
+            out_iter3,
+            iter1
+        )
+        
+        # Two columns, all_na=False
+        out_df4, out_iter4 = dataframes.sync_na_drop(df1, ['a', 'c'], iter1, all_na=False)
+        
+        self.assertTrue(
+            out_df4.equals(
+                df1.dropna(subset=['a'])
+            )
+        )
+        self.assertEqual(
+            out_iter4,
+            ['a', 'c']
+        )
+        
+        # 'a' and 'b' columns, all_na=True
+        out_df5, out_iter5 = dataframes.sync_na_drop(df1, ['a', 'b'], iter1, all_na=True)
+        
+        self.assertTrue(
+            out_df5.equals(
+                df1.dropna(subset=['a', 'b'], how='all')
+            )
+        )
+        self.assertEqual(
+            out_iter5,
+            ['a', 'c']
+        )
+        
+        # a' and 'b' columns, all_na=False
+        out_df6, out_iter6 = dataframes.sync_na_drop(df1, ['a', 'b'], iter1, all_na=False)
+        
+        self.assertTrue(
+            out_df6.equals(
+                df1.dropna(subset=['a', 'b'], how='any')
+            )
+        )
+        self.assertEqual(
+            out_iter6,
+            ['a']
+        )
+        
+        # Multiple iterables
+        iter2 = ['d', 'e', 'f']
+        _, out_iter7 = dataframes.sync_na_drop(df1, ['a', 'b'], iter1, iter2, all_na=False)
+        
+        self.assertEqual(
+            out_iter7,
+            [
+                ['a'],
+                ['d']
+            ]
+        )
+        
+        # Raise length error
+        iter3 = 5*['h']
+        with self.assertRaises(ValueError):
+            dataframes.sync_na_drop(df1, ['a', 'b'], iter1, iter3, all_na=True)
         
 
 if __name__ == '__main__':
