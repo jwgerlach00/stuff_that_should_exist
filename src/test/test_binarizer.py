@@ -86,6 +86,19 @@ class TestBinarize(unittest.TestCase):
                 equal_nan=True
             )
         )
+        
+    def test_vectorize_float(self):
+        values = [5, 10, 15, 20, 25]
+        qualifiers = ['=', '<', '<', '<', '<']
+        binarizer = Binarizer(values=values, qualifiers=qualifiers, boundary=2, active_operator='>')
+        
+        self.assertTrue(
+            np.allclose(
+                binarizer.binarize(),
+                [1] + 4*[np.nan],
+                equal_nan=True
+            )
+        )
             
 
 if __name__ == '__main__':

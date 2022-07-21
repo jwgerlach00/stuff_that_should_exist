@@ -1,13 +1,15 @@
-
 import numpy as np
 from typing import Iterable, Union, Optional
 from copy import copy
-
+    
+    
 class Binarizer:
     active_operators = ['>', '<', '>=', '<=']
     
     __less_than = ['<', '≤']
     __greater_than = ['>', '≥']
+    
+    __float_vectorize = lambda x: np.vectorize(x, otypes=[float])
     
     def __init__(self, values:Iterable, boundary:Union[float, int, np.number], active_operator:str,
                  qualifiers:Optional[Iterable]=None) -> None:
@@ -58,7 +60,7 @@ class Binarizer:
             raise(ValueError, '"active_operator" does not contain ">" or "<"')
     
     @staticmethod
-    @np.vectorize
+    @__float_vectorize
     def bin_qualifiers(value:Union[int, float, np.number], boundary:Union[int, float, np.number], relation:str,
                              active_operator:str) -> Union[int, float]:
         """Categorizes value as active (1), inactive (0), or conflict (np.nan) using qualifiers.
@@ -72,7 +74,6 @@ class Binarizer:
         Returns:
             Union[int, float]: 1 (active), 0 (inactive), or np.nan for qualifier conflict / unrecognized relation.
         """
-        
         greater_than_bound = None
         
         if np.isnan(value):
@@ -102,7 +103,7 @@ class Binarizer:
         return Binarizer.__active_operator_handler(greater_than_bound, active_operator)
     
     @staticmethod
-    @np.vectorize
+    @__float_vectorize
     def bin_no_qualifiers(value:Union[int, float, np.number], boundary:Union[int, float, np.number],
                                 active_operator:str) -> Union[int, float]:
         """Categorizes value as active (1) or inactive (0).
