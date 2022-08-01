@@ -99,7 +99,21 @@ class TestBinarize(unittest.TestCase):
                 equal_nan=True
             )
         )
-            
+    
+    def test_negatives_inactive(self):
+        values = [-7.85, -6.77, -6.66, -6.51, -5.73, -5.35]
+        boundary = 6
+        op = '>='
+        qualifiers = len(values)*['=']
+        
+        binarizer = Binarizer(values=values, qualifiers=qualifiers, boundary=boundary, active_operator=op)
+        out = binarizer.binarize()
+        self.assertTrue(
+            np.array_equal(
+                out,
+                np.zeros(len(values))
+            )
+        )
 
 if __name__ == '__main__':
     unittest.main()
