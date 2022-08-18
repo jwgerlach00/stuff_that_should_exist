@@ -14,7 +14,8 @@ setup(
     install_requires=[
         'numpy',
         'pandas',
-        'werkzeug',
-        'pymongo'
+        'plotly',
+        'pymongo',
+        'Werkzeug',
     ],
 )
