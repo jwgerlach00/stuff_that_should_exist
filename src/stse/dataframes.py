@@ -219,6 +219,8 @@ def compare(inner_df:pd.DataFrame, outer_df:pd.DataFrame, inner_column:str, oute
         outer_column (str): Name of column to compare along in outer_df.
         find_same (bool, optional): If True returns same values, if False returns values in outer_df column not found in
             inner_df column. Defaults to True.
+        combine_headers (bool, optional): If True, returns a DataFrame with both inner_df and outer_df headers.
+            Defaults to False.
 
     Returns:
         pd.DataFrame: outer_df with condition specified by find_same.
@@ -233,7 +235,7 @@ def compare(inner_df:pd.DataFrame, outer_df:pd.DataFrame, inner_column:str, oute
                                    outer_column=inner_column,
                                    find_same=True,  # Only for shared
                                    combine_headers=False)  # Don't run again (infinitely)
-        # return pd.concat([outer_df.iloc[indices], inner_df_compare], axis=1)
+        
         return pd.merge(outer_df.iloc[indices], inner_df_compare, how='left', left_on=outer_column, right_on=inner_column)
         
     return outer_df.iloc[indices]
