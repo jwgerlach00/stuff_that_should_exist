@@ -209,7 +209,7 @@ def z_norm(df:pd.DataFrame) -> pd.DataFrame:
     return (df - df.mean())/df.std()
 
 def compare(inner_df:pd.DataFrame, outer_df:pd.DataFrame, inner_column:str, outer_column:str,
-            find_same:bool=True) -> pd.DataFrame:
+            find_same:bool=True, combine_headers:bool=False) -> pd.DataFrame:
     """Compares two DataFrames along two specified column names.
 
     Args:
@@ -225,6 +225,17 @@ def compare(inner_df:pd.DataFrame, outer_df:pd.DataFrame, inner_column:str, oute
     """
     outer_in_inner = outer_df[outer_column].isin(inner_df[inner_column])
     indices = outer_in_inner[(outer_in_inner if find_same else ~outer_in_inner)].index
+    
+    if combine_headers and find_same:
+        inner_df_compare = compare(inner_df=outer_df,  # Swap outer w/ inner
+                                   outer_df=inner_df,
+                                   inner_column=outer_column,
+                                   outer_column=inner_column,
+                                   find_same=True,  # Only for shared
+                                   combine_headers=False)  # Don't run again (infinitely)
+        # return pd.concat([outer_df.iloc[indices], inner_df_compare], axis=1)
+        return pd.merge(outer_df.iloc[indices], inner_df_compare, how='left', left_on=outer_column, right_on=inner_column)
+        
     return outer_df.iloc[indices]
 
 def concat(dfs:Iterable[pd.DataFrame], drop_uncommon_columns:bool=True) -> pd.DataFrame:

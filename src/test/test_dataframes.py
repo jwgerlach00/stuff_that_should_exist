@@ -195,7 +195,7 @@ class TestDataframes(unittest.TestCase):
     def test_compare(self):
         inner = pd.DataFrame({
             'a': [1, 2, 3, 4],
-            'b': [2, 3, 5, 6]
+            'b': [2, 3, 5, 6],
         })
         outer = pd.DataFrame({
             'c': [2, 3, 5, 6, 7, 8, 9, 10]
@@ -204,6 +204,13 @@ class TestDataframes(unittest.TestCase):
         # Find same
         expected = outer.iloc[:2]
         out = dataframes.compare(inner, outer, 'a', 'c', find_same=True)
+        self.assertTrue(
+            out.equals(expected)
+        )
+
+        # Try with combine_headers
+        expected = pd.concat((outer.iloc[:2], inner.iloc[1:3].reset_index(drop=True)), axis=1)
+        out = dataframes.compare(inner, outer, 'a', 'c', find_same=True, combine_headers=True)
         self.assertTrue(
             out.equals(expected)
         )
